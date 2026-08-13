@@ -1,61 +1,63 @@
 use crate::{
-    any::difficulty::{
-        object::{HasStartTime, IDifficultyObject},
-        skills::{StrainSkill, strain_decay},
-    },
+    model::mods::GameMods,
     osu::difficulty::{
         evaluators::{RhythmEvaluator, SpeedEvaluator},
         object::OsuDifficultyObject,
+        skills::harmonic::HarmonicSkill,
     },
+    util::{difficulty::logistic, float_ext::FloatExt},
 };
 
-use super::strain::OsuStrainSkill;
-
-define_skill! {
-    #[derive(Clone)]
-    pub struct Speed: StrainSkill => [OsuDifficultyObject<'a>][OsuDifficultyObject<'a>] {
-        current_strain: f64 = 0.0,
-        current_rhythm: f64 = 0.0,
-        hit_window: f64,
-        has_autopilot_mod: bool,
-        slider_strains: Vec<f64> = Vec::with_capacity(64),
-    }
+#[derive(Clone)]
+pub struct Speed {
+    inner: HarmonicSkill,
+    current_strain: f64,
+    slider_strains: Vec<f64>,
+    has_relax: bool,
+    has_autopilot: bool,
 }
 
 impl Speed {
-    const SKILL_MULTIPLIER: f64 = 1.47;
+    const SKILL_MULTIPLIER: f64 = 1.16;
     const STRAIN_DECAY_BASE: f64 = 0.3;
-    const REDUCED_SECTION_COUNT: usize = 5;
 
-    fn calculate_initial_strain(
-        &mut self,
-        time: f64,
-        curr: &OsuDifficultyObject<'_>,
-        objects: &[OsuDifficultyObject<'_>],
-    ) -> f64 {
-        let prev_start_time = curr
-            .previous(0, objects)
-            .map_or(0.0, HasStartTime::start_time);
-
-        (self.current_strain * self.current_rhythm)
-            * strain_decay(time - prev_start_time, Self::STRAIN_DECAY_BASE)
+    pub fn new(mods: &GameMods) -> Self {
+        Self {
+            inner: HarmonicSkill::new(20.0, 0.9),
+            current_strain: 0.0,
+            slider_strains: Vec::with_capacity(64),
+            has_relax: mods.rx(),
+            has_autopilot: mods.ap(),
+        }
     }
 
-    fn strain_value_at(
+    pub fn process(&mut self, curr: &OsuDifficultyObject<'_>, objects: &[OsuDifficultyObject<'_>]) {
+        let difficulty = self.object_difficulty_of(curr, objects);
+        self.inner.process(difficulty);
+    }
+
+    fn object_difficulty_of(
         &mut self,
         curr: &OsuDifficultyObject<'_>,
         objects: &[OsuDifficultyObject<'_>],
     ) -> f64 {
-        self.current_strain *= strain_decay(curr.adjusted_delta_time, Self::STRAIN_DECAY_BASE);
-        self.current_strain += SpeedEvaluator::evaluate_diff_of(
-            curr,
-            objects,
-            self.hit_window,
-            self.has_autopilot_mod,
-        ) * Self::SKILL_MULTIPLIER;
-        self.current_rhythm = RhythmEvaluator::evaluate_diff_of(curr, objects, self.hit_window);
+        if self.has_relax {
+            return 0.0;
+        }
 
-        let total_strain = self.current_strain * self.current_rhythm;
+        let decay = crate::any::difficulty::skills::strain_decay(
+            curr.adjusted_delta_time,
+            Self::STRAIN_DECAY_BASE,
+        );
+
+        self.current_strain *= decay;
+        self.current_strain += self.calculate_adjusted_difficulty(curr, objects)
+            * (1.0 - decay)
+            * Self::SKILL_MULTIPLIER;
+
+        let current_rhythm = RhythmEvaluator::evaluate_diff_of(curr, objects);
+
+        let total_strain = self.current_strain * current_rhythm;
 
         if curr.base.is_slider() {
             self.slider_strains.push(total_strain);
@@ -64,35 +66,76 @@ impl Speed {
         total_strain
     }
 
-    pub fn relevant_note_count(&self) -> f64 {
-        self.strain_skill_object_strains
+    fn calculate_adjusted_difficulty(
+        &self,
+        curr: &OsuDifficultyObject<'_>,
+        objects: &[OsuDifficultyObject<'_>],
+    ) -> f64 {
+        let mut difficulty = SpeedEvaluator::evaluate_diff_of(curr, objects);
+
+        if self.has_autopilot {
+            difficulty *= 0.5;
+        }
+
+        difficulty
+    }
+
+    pub fn relevant_object_count(&self) -> f64 {
+        if self.inner.object_difficulties.is_empty() {
+            return 0.0;
+        }
+
+        let max_strain = self
+            .inner
+            .object_difficulties
             .iter()
             .copied()
-            .max_by(f64::total_cmp)
-            .filter(|&n| n > 0.0)
-            .map_or(0.0, |max_strain| {
-                self.strain_skill_object_strains
-                    .iter()
-                    .fold(0.0, |sum, strain| {
-                        sum + (1.0 + f64::exp(-(strain / max_strain * 12.0 - 6.0))).recip()
-                    })
-            })
+            .fold(0.0, f64::max);
+
+        if FloatExt::eq(max_strain, 0.0) {
+            return 0.0;
+        }
+
+        self.inner
+            .object_difficulties
+            .iter()
+            .map(|strain| logistic(*strain / max_strain, 0.5, 12.0, None))
+            .sum()
     }
 
-    pub fn slider_strains(&self) -> &[f64] {
-        &self.slider_strains
+    pub fn count_top_weighted_sliders(&self, difficulty_value: f64) -> f64 {
+        if self.slider_strains.is_empty() {
+            return 0.0;
+        }
+
+        if FloatExt::eq(self.inner.object_weight_sum, 0.0) {
+            return 0.0;
+        }
+
+        // * What would the top note be if all note values were identical
+        let consistent_top_object = difficulty_value / self.inner.object_weight_sum;
+
+        if FloatExt::eq(consistent_top_object, 0.0) {
+            return 0.0;
+        }
+
+        // * Use a weighted sum of all notes. Constants are arbitrary and give nice values
+        self.slider_strains
+            .iter()
+            .map(|s| logistic(*s / consistent_top_object, 0.88, 10.0, Some(1.1)))
+            .sum()
     }
 
-    // From `OsuStrainSkill`; native rather than trait function so that it has
-    // priority over `StrainSkill::difficulty_value`
-    fn difficulty_value(current_strain_peaks: Vec<f64>) -> f64 {
-        super::strain::difficulty_value(
-            current_strain_peaks,
-            Self::REDUCED_SECTION_COUNT,
-            Self::REDUCED_STRAIN_BASELINE,
-            Self::DECAY_WEIGHT,
-        )
+    pub fn count_top_weighted_object_difficulties(&self, difficulty_value: f64) -> f64 {
+        self.inner
+            .count_top_weighted_object_difficulties(difficulty_value)
+    }
+
+    pub fn cloned_difficulty_value(&mut self) -> f64 {
+        self.inner.difficulty_value()
+    }
+
+    pub fn into_current_strain_peaks(self) -> Vec<f64> {
+        self.inner.object_difficulties
     }
 }
-
-impl OsuStrainSkill for Speed {}

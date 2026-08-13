@@ -1,3 +1,24 @@
+# v5.0.0 (2026-08-12)
+
+Updated all modes' difficulty and performance calculation to osu!lazer
+`1032a7c31581513c8be751e46f0940e1c95ed252` (2026.730.0). See osu!'s newspost:
+<https://osu.ppy.sh/home/news/2026-07-03-performance-points-star-rating-updates>
+
+### Breaking
+
+- osu!standard PP/SR rework: aim is now snap/flow/agility, speed and reading use
+  harmonic skills, and AR/HD bonuses are replaced by a dedicated reading skill.
+- Added `OsuDifficultyAttributes` fields `reading` and
+  `reading_difficult_note_count`.
+- Added `OsuPerformanceAttributes` field `pp_reading`.
+- Added `OsuStrains.reading` (per-object reading difficulties).
+- `PERFORMANCE_BASE_MULTIPLIER` is now `1.12` (was `1.14`).
+- Added `PERFORMANCE_NORM_EXPONENT` (`1.1`).
+- Taiko rhythm skill multiplier is now `0.770` (was `0.75`), with updated rhythm
+  evaluation (full great hit window, long-gap penalty).
+- Catch movement applies a linear-spacing nerf; catch PP combo scaling now uses
+  the map's max combo.
+
 # v4.0.1 (2026-04-12)
 
 Fixed a bug about legacy score miss approximation

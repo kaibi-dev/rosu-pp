@@ -9,7 +9,6 @@ use crate::{
 define_skill! {
     #[derive(Clone)]
     pub struct Rhythm: StrainDecaySkill => TaikoDifficultyObjects[TaikoDifficultyObject] {
-        great_hit_window: f64,
     }
 }
 
@@ -22,7 +21,7 @@ impl Rhythm {
         curr: &TaikoDifficultyObject,
         objects: &TaikoDifficultyObjects,
     ) -> f64 {
-        let mut difficulty = RhythmEvaluator::evaluate_diff_of(curr, self.great_hit_window);
+        let mut difficulty = RhythmEvaluator::evaluate_diff_of(curr);
 
         // * To prevent abuse of exceedingly long intervals between awkward rhythms, we penalise its difficulty.
         let stamina_difficulty = StaminaEvaluator::evaluate_diff_of(curr, objects) - 0.5; // * Remove base strain

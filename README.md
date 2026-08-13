@@ -11,10 +11,10 @@ with emphasis on a precise translation to Rust for the most [accurate results](#
 while also providing a significant [boost in performance](#speed).
 
 Last commits of the ported code:
-  - [osu!lazer] : `28c846b4d9366484792e27f4729cd1afa2cdeb66` (2025-10-13)
-  - [osu!tools] : `ab97b64f60901952926b2121ddffb8976d7f8775` (2025-10-16)
+  - [osu!lazer] : `1032a7c31581513c8be751e46f0940e1c95ed252` (2026-07-29)
+  - [osu!difficulty-calculator] : `8d0c7595ac1a4054d4b467fab6ab8c0dec5ef040` (2026-07-30)
 
-News posts of the latest updates: <https://osu.ppy.sh/home/news/2025-10-29-performance-points-star-rating-updates>
+News posts of the latest updates: <https://osu.ppy.sh/home/news/2026-07-03-performance-points-star-rating-updates>
 
 ### Usage
 
@@ -144,7 +144,7 @@ Using `rosu-pp` from other languages than Rust:
 
 [osu!]: https://osu.ppy.sh/home
 [osu!lazer]: https://github.com/ppy/osu
-[osu!tools]: https://github.com/ppy/osu-tools
+[osu!difficulty-calculator]: https://github.com/ppy/osu-difficulty-calculator
 [`tracing`]: https://docs.rs/tracing
 [rosu-pp-js]: https://github.com/MaxOhn/rosu-pp-js
 [rosu-pp-py]: https://github.com/MaxOhn/rosu-pp-py

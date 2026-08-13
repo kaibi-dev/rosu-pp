@@ -110,7 +110,7 @@ impl DifficultyValues {
             palpable_objects.iter().take(take),
         );
 
-        let mut movement = Movement::new(clock_rate);
+        let mut movement = Movement::new();
 
         for curr in diff_objects.iter() {
             movement.process(curr, &diff_objects);

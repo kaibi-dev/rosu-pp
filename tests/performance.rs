@@ -34,6 +34,7 @@ macro_rules! test_cases {
         pp_aim: $pp_aim:expr,
         pp_flashlight: $pp_flashlight:expr,
         pp_speed: $pp_speed:expr,
+        pp_reading: $pp_reading:expr,
         effective_miss_count: $effective_miss_count:expr,
         speed_deviation: $speed_deviation:expr,
         combo_based_estimated_miss_count: $combo_based_estimated_miss_count:expr,
@@ -49,6 +50,7 @@ macro_rules! test_cases {
                 pp_aim: $pp_aim,
                 pp_flashlight: $pp_flashlight,
                 pp_speed: $pp_speed,
+                pp_reading: $pp_reading,
                 effective_miss_count: $effective_miss_count,
                 speed_deviation: $speed_deviation,
                 combo_based_estimated_miss_count: $combo_based_estimated_miss_count,
@@ -107,95 +109,101 @@ macro_rules! test_cases {
 
 #[test]
 fn basic_osu() {
-    #[cfg(target_os = "windows")]
     test_cases! {
         Osu: OSU {
             NM => {
-                pp: 287.9051448920619,
+                pp: 316.62562557494704,
                 pp_acc: 98.99847982709288,
-                pp_aim: 113.66811014707582,
+                pp_aim: 148.75278891878943,
                 pp_flashlight: 0.0,
-                pp_speed: 65.7316947411581,
+                pp_speed: 61.34653468094172,
+                pp_reading: 2.280421389089157,
                 effective_miss_count: 0.0,
-                speed_deviation: Some(11.559405011202584),
+                speed_deviation: Some(11.70045116819282),
                 combo_based_estimated_miss_count: 0.0,
                 score_based_estimated_miss_count: None,
                 aim_estimated_slider_breaks: 0.0,
                 speed_estimated_slider_breaks: 0.0,
             };
             HD => {
-                pp: 315.8674097332546,
-                pp_acc: 106.91835821326032,
-                pp_aim: 125.5489356876975,
+                pp: 350.16256987757043,
+                pp_acc: 98.99847982709288,
+                pp_aim: 148.75278891878943,
                 pp_flashlight: 0.0,
-                pp_speed: 72.9912208672784,
+                pp_speed: 61.34653468094172,
+                pp_reading: 41.78713764108266,
                 effective_miss_count: 0.0,
-                speed_deviation: Some(11.559405011202584),
+                speed_deviation: Some(11.70045116819282),
                 combo_based_estimated_miss_count: 0.0,
                 score_based_estimated_miss_count: None,
                 aim_estimated_slider_breaks: 0.0,
                 speed_estimated_slider_breaks: 0.0,
             };
             EZ HD => {
-                pp: 200.88128466771315,
-                pp_acc: 17.33989029835826,
-                pp_aim: 109.17177789930311,
+                pp: 330.90290064314655,
+                pp_acc: 16.05545397996135,
+                pp_aim: 88.9845069859366,
                 pp_flashlight: 0.0,
-                pp_speed: 64.55964097206972,
+                pp_speed: 40.67344998245687,
+                pp_reading: 179.8787976518089,
                 effective_miss_count: 0.0,
-                speed_deviation: Some(22.768253044002595),
+                speed_deviation: Some(23.04067406810845),
                 combo_based_estimated_miss_count: 0.0,
                 score_based_estimated_miss_count: None,
                 aim_estimated_slider_breaks: 0.0,
                 speed_estimated_slider_breaks: 0.0,
             };
             HR => {
-                pp: 422.8822464661912,
+                pp: 468.21934604774157,
                 pp_acc: 161.55575439788055,
-                pp_aim: 167.50210608714042,
+                pp_aim: 231.45791599856489,
                 pp_flashlight: 0.0,
-                pp_speed: 78.89335639563441,
+                pp_speed: 61.86844909389746,
+                pp_reading: 3.0588804345706087,
                 effective_miss_count: 0.0,
-                speed_deviation: Some(8.598712200750178),
+                speed_deviation: Some(8.609766678538842),
                 combo_based_estimated_miss_count: 0.0,
                 score_based_estimated_miss_count: None,
                 aim_estimated_slider_breaks: 0.0,
                 speed_estimated_slider_breaks: 0.0,
             };
             DT => {
-                pp: 784.2400469306212,
+                pp: 860.8298537654979,
                 pp_acc: 183.66566616694254,
-                pp_aim: 348.7917741691343,
+                pp_aim: 436.40604835642193,
                 pp_flashlight: 0.0,
-                pp_speed: 224.8868678368528,
+                pp_speed: 198.35289926936036,
+                pp_reading: 32.65490715326043,
                 effective_miss_count: 0.0,
-                speed_deviation: Some(7.6754769185728815),
+                speed_deviation: Some(7.66444640194172),
                 combo_based_estimated_miss_count: 0.0,
                 score_based_estimated_miss_count: None,
                 aim_estimated_slider_breaks: 0.0,
                 speed_estimated_slider_breaks: 0.0,
             };
             FL => {
-                pp: 415.9768919360004,
-                pp_acc: 100.97844942363474,
-                pp_aim: 113.66811014707582,
-                pp_flashlight: 132.3188848707867,
-                pp_speed: 65.7316947411581,
+                pp: 444.5215031418089,
+                pp_acc: 98.99847982709288,
+                pp_aim: 148.75278891878943,
+                pp_flashlight: 137.45248335884497,
+                pp_speed: 61.34653468094172,
+                pp_reading: 2.280421389089157,
                 effective_miss_count: 0.0,
-                speed_deviation: Some(11.559405011202584),
+                speed_deviation: Some(11.70045116819282),
                 combo_based_estimated_miss_count: 0.0,
                 score_based_estimated_miss_count: None,
                 aim_estimated_slider_breaks: 0.0,
                 speed_estimated_slider_breaks: 0.0,
             };
             HD FL => {
-                pp: 483.7752666636294,
-                pp_acc: 109.05672537752552,
-                pp_aim: 125.5489356876975,
-                pp_flashlight: 171.65397211175005,
-                pp_speed: 72.9912208672784,
+                pp: 524.2331226349692,
+                pp_acc: 98.99847982709288,
+                pp_aim: 148.75278891878943,
+                pp_flashlight: 184.18699091684724,
+                pp_speed: 61.34653468094172,
+                pp_reading: 41.78713764108266,
                 effective_miss_count: 0.0,
-                speed_deviation: Some(11.559405011202584),
+                speed_deviation: Some(11.70045116819282),
                 combo_based_estimated_miss_count: 0.0,
                 score_based_estimated_miss_count: None,
                 aim_estimated_slider_breaks: 0.0,
@@ -210,27 +218,27 @@ fn basic_taiko() {
     test_cases! {
         Taiko: TAIKO {
             NM => {
-                pp: 130.3342753050141,
-                pp_acc: 96.78235028730231,
-                pp_difficulty: 33.551925017711795,
+                pp: 130.26636361095524,
+                pp_acc: 96.78147528038077,
+                pp_difficulty: 33.48488833057447,
                 estimated_unstable_rate: Some(146.32383579722838),
             };
             HD => {
-                pp: 138.26399007691603,
-                pp_acc: 104.04102655884999,
-                pp_difficulty: 34.22296351806603,
+                pp: 138.1946720235953,
+                pp_acc: 104.04008592640933,
+                pp_difficulty: 34.15458609718596,
                 estimated_unstable_rate: Some(146.32383579722838),
             };
             HR => {
-                pp: 166.77434181278937,
-                pp_acc: 130.20134262470424,
-                pp_difficulty: 36.57299918808513,
+                pp: 166.7024624392237,
+                pp_acc: 130.19970760626504,
+                pp_difficulty: 36.50275483295865,
                 estimated_unstable_rate: Some(120.87621218031911),
             };
             DT => {
-                pp: 266.1232222806763,
-                pp_acc: 173.19552687459048,
-                pp_difficulty: 92.92769540608585,
+                pp: 265.5965861527288,
+                pp_acc: 173.1717092863732,
+                pp_difficulty: 92.42487686635559,
                 estimated_unstable_rate: Some(97.54922386481893),
             };
         }
@@ -239,45 +247,44 @@ fn basic_taiko() {
 
 #[test]
 fn convert_taiko() {
-    #[cfg(target_os = "windows")]
     test_cases! {
         Taiko: OSU {
             NM => {
-                pp: 388.8389762212271,
-                pp_acc: 220.27109512284244,
-                pp_difficulty: 168.56788109838465,
+                pp: 372.44587607195757,
+                pp_acc: 219.22939331130098,
+                pp_difficulty: 153.2164827606566,
                 estimated_unstable_rate: Some(81.74165086164194),
             };
             HD => {
-                pp: 389.68181562671896,
-                pp_acc: 220.27109512284244,
-                pp_difficulty: 169.41072050387652,
+                pp: 373.2119584857609,
+                pp_acc: 219.22939331130098,
+                pp_difficulty: 153.9825651744599,
                 estimated_unstable_rate: Some(81.74165086164194),
             };
             HR => {
-                pp: 466.289743228387,
-                pp_acc: 259.1975812188925,
-                pp_difficulty: 207.0921620094945,
+                pp: 452.2496503558974,
+                pp_acc: 257.6827645468263,
+                pp_difficulty: 194.56688580907107,
                 estimated_unstable_rate: Some(70.8427640800897),
             };
             DT => {
-                pp: 805.083671145498,
-                pp_acc: 392.44103449845574,
-                pp_difficulty: 412.64263664704225,
+                pp: 769.1303989592802,
+                pp_acc: 383.9741667379376,
+                pp_difficulty: 385.1562322213426,
                 estimated_unstable_rate: Some(54.494433907761305),
             };
         }
-    }
+    };
 }
 
 #[test]
 fn basic_catch() {
     test_cases! {
         Catch: CATCH {
-            NM => { pp: 113.85903714373046 };
-            HD => { pp: 136.63084457247655 };
-            HD HR => { pp: 231.7403429678108 };
-            DT => { pp: 247.18402249125842 };
+            NM => { pp: 112.72215339177879 };
+            HD => { pp: 135.26658407013454 };
+            HD HR => { pp: 231.1954012763412 };
+            DT => { pp: 245.48176596381523 };
         }
     };
 }
@@ -286,10 +293,10 @@ fn basic_catch() {
 fn convert_catch() {
     test_cases! {
         Catch: OSU {
-            NM => { pp: 232.52175944328079 };
-            HD => { pp: 256.35523645996665 };
-            HD HR => { pp: 327.71861407740374 };
-            DT => { pp: 503.47065792054815 };
+            NM => { pp: 232.34402311853054 };
+            HD => { pp: 256.159282164472 };
+            HD HR => { pp: 327.3523805137957 };
+            DT => { pp: 502.8408227990554 };
         }
     };
 }
@@ -335,6 +342,7 @@ impl AssertEq for OsuPerformanceAttributes {
             pp_aim,
             pp_flashlight,
             pp_speed,
+            pp_reading,
             effective_miss_count,
             speed_deviation,
             combo_based_estimated_miss_count,
@@ -348,6 +356,7 @@ impl AssertEq for OsuPerformanceAttributes {
         assert_eq_float(*pp_aim, expected.pp_aim);
         assert_eq_float(*pp_flashlight, expected.pp_flashlight);
         assert_eq_float(*pp_speed, expected.pp_speed);
+        assert_eq_float(*pp_reading, expected.pp_reading);
         assert_eq_float(*effective_miss_count, expected.effective_miss_count);
         assert_eq_option(*speed_deviation, expected.speed_deviation);
         assert_eq_float(

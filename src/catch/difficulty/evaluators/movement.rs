@@ -12,12 +12,11 @@ impl MovementEvaluator {
     pub fn evaluate_diff_of(
         curr: &CatchDifficultyObject,
         diff_objects: &[CatchDifficultyObject],
-        clock_rate: f64,
     ) -> f64 {
         let catch_last_obj = curr.previous(0, diff_objects);
         let catch_last_last_obj = curr.previous(1, diff_objects);
 
-        let weighted_strain_time = curr.strain_time + 13.0 + (3.0 / clock_rate);
+        let weighted_strain_time = curr.strain_time + 13.0 + (3.0 / curr.clock_rate);
 
         let mut dist_addition = f64::from(curr.dist_moved.abs()).powf(1.3) / 510.0;
         let sqrt_strain = weighted_strain_time.sqrt();
@@ -49,6 +48,36 @@ impl MovementEvaluator {
                 / sqrt_strain;
         }
 
+        // * Linear spacing nerf.
+        let mut linear_spacing_count = 0;
+
+        for i in 0..curr.idx.min(10) {
+            let Some(catch_prev_obj) = curr.previous(i, diff_objects) else {
+                break;
+            };
+
+            // * Only same direction movements matter as they do not take any additional inputs.
+            if curr.dist_moved.signum() != catch_prev_obj.dist_moved.signum()
+                || curr.dist_moved == 0.0
+                || catch_prev_obj.dist_moved == 0.0
+            {
+                break;
+            }
+
+            let current_spacing = f64::from(curr.dist_moved.abs()) / curr.strain_time;
+            let prev_spacing =
+                f64::from(catch_prev_obj.dist_moved.abs()) / catch_prev_obj.strain_time;
+            let relative_difference = (current_spacing / prev_spacing - 1.0).abs();
+
+            if relative_difference > 0.05 {
+                break;
+            }
+
+            linear_spacing_count += 1;
+        }
+
+        dist_addition *= 0.7_f64.powi(linear_spacing_count);
+
         // * Bonus for edge dashes.
         if curr.last_object.dist_to_hyper_dash <= 20.0 {
             if !curr.last_object.hyper_dash {
@@ -59,7 +88,7 @@ impl MovementEvaluator {
             dist_addition *= 1.0
                 + edge_dash_bonus
                     * f64::from((20.0 - curr.last_object.dist_to_hyper_dash) / 20.0)
-                    * ((curr.strain_time * clock_rate).min(265.0) / 265.0).powf(1.5);
+                    * ((curr.strain_time * curr.clock_rate).min(265.0) / 265.0).powf(1.5);
         }
 
         let last_exact_dist_moved = catch_last_obj.map_or(0.0, |obj| obj.exact_dist_moved);

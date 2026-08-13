@@ -2,7 +2,6 @@ use crate::catch::difficulty::{evaluators::MovementEvaluator, object::CatchDiffi
 
 define_skill! {
     pub struct Movement: StrainDecaySkill => [CatchDifficultyObject][CatchDifficultyObject] {
-        clock_rate: f64,
     }
 }
 
@@ -19,6 +18,6 @@ impl Movement {
         curr: &CatchDifficultyObject,
         diff_objects: &[CatchDifficultyObject],
     ) -> f64 {
-        MovementEvaluator::evaluate_diff_of(curr, diff_objects, self.clock_rate)
+        MovementEvaluator::evaluate_diff_of(curr, diff_objects)
     }
 }

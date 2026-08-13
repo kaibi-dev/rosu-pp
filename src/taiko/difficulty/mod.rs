@@ -36,7 +36,7 @@ mod utils;
 
 #[expect(clippy::unreadable_literal, reason = "staying in-sync with lazer")]
 const DIFFICULTY_MULTIPLIER: f64 = 0.084375;
-const RHYTHM_SKILL_MULTIPLIER: f64 = 0.75 * DIFFICULTY_MULTIPLIER;
+const RHYTHM_SKILL_MULTIPLIER: f64 = 0.770 * DIFFICULTY_MULTIPLIER;
 const READING_SKILL_MULTIPLIER: f64 = 0.100 * DIFFICULTY_MULTIPLIER;
 const COLOR_SKILL_MULTIPLIER: f64 = 0.375 * DIFFICULTY_MULTIPLIER;
 const STAMINA_SKILL_MULTIPLIER: f64 = 0.445 * DIFFICULTY_MULTIPLIER;
@@ -296,12 +296,13 @@ impl DifficultyValues {
             &mut max_combo,
             &mut n_diff_objects,
             difficulty.get_mods(),
+            2.0 * great_hit_window,
         );
 
         // The first hit object has no difficulty object
         n_diff_objects = n_diff_objects.saturating_sub(1);
 
-        let mut skills = TaikoSkills::new(great_hit_window, map.is_convert);
+        let mut skills = TaikoSkills::new(map.is_convert);
 
         for hit_object in diff_objects.iter().take(n_diff_objects) {
             skills.rhythm.process(&hit_object.get(), &diff_objects);
@@ -391,6 +392,7 @@ impl DifficultyValues {
         max_combo: &mut u32,
         n_diff_objects: &mut usize,
         mods: &GameMods,
+        hit_window_great: f64,
     ) -> TaikoDifficultyObjects {
         let mut hit_objects_iter = converted
             .hit_objects
@@ -436,6 +438,7 @@ impl DifficultyValues {
                 i,
                 converted,
                 global_slider_velocity,
+                hit_window_great,
                 &mut diff_objects,
             );
 

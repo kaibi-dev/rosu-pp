@@ -47,9 +47,11 @@ impl CatchPerformanceCalculator<'_> {
         pp *= 0.97_f64.powf(f64::from(self.state.hitresults.misses));
 
         // Combo scaling
-        if self.state.max_combo > 0 {
-            pp *= (f64::from(self.state.max_combo).powf(0.35) / f64::from(max_combo).powf(0.35))
-                .min(1.0);
+        let score_max_combo = self.state.max_combo.min(max_combo);
+
+        if max_combo > 0 {
+            pp *=
+                (f64::from(score_max_combo).powf(0.35) / f64::from(max_combo).powf(0.35)).min(1.0);
         }
 
         // AR scaling
@@ -82,7 +84,7 @@ impl CatchPerformanceCalculator<'_> {
         }
 
         // Accuracy scaling
-        pp *= self.state.hitresults.accuracy().powf(5.5);
+        pp *= self.state.hitresults.accuracy().clamp(0.0, 1.0).powf(5.5);
 
         // NF penalty
         if self.mods.nf() {

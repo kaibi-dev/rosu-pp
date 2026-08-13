@@ -119,9 +119,10 @@ fn new(difficulty: Difficulty, map: &Beatmap) -> TaikoGradualDifficulty {
         &mut max_combo,
         &mut n_diff_objects,
         difficulty.get_mods(),
+        2.0 * great_hit_window,
     );
 
-    let skills = TaikoSkills::new(great_hit_window, map.is_convert);
+    let skills = TaikoSkills::new(map.is_convert);
 
     let attrs = TaikoDifficultyAttributes {
         great_hit_window,

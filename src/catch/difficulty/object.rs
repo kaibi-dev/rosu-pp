@@ -14,6 +14,7 @@ pub struct CatchDifficultyObject {
     pub dist_moved: f32,
     pub exact_dist_moved: f32,
     pub strain_time: f64,
+    pub clock_rate: f64,
     pub last_object: LastObject,
 }
 
@@ -54,6 +55,7 @@ impl CatchDifficultyObject {
             dist_moved: 0.0,
             exact_dist_moved: 0.0,
             strain_time,
+            clock_rate,
             last_object,
         };
 

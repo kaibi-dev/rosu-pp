@@ -2,6 +2,9 @@ use std::f64::consts::{E, PI};
 
 use crate::util::float_ext::FloatExt;
 
+/// Square root of 2
+pub const SQRT2: f64 = 1.4142135623730950;
+
 pub const fn bpm_to_milliseconds(bpm: f64, delimiter: Option<i32>) -> f64 {
     60_000.0 / i32_unwrap_or(delimiter, 4) as f64 / bpm
 }
@@ -40,6 +43,8 @@ pub fn bell_curve(x: f64, mean: f64, width: f64, multiplier: Option<f64>) -> f64
     multiplier.unwrap_or(1.0) * f64::exp(E * -(f64::powf(x - mean, 2.0) / f64::powf(width, 2.0)))
 }
 
+/// Smoothstep bell curve overload of `DiffUtils.SmoothstepBellCurve(x, mean, width)`.
+#[allow(dead_code, reason = "kept in-sync with lazer DiffUtils overload")]
 pub fn smoothstep_bell_curve(x: f64, mean: f64, width: f64) -> f64 {
     let mut new_x = x;
 
@@ -51,6 +56,16 @@ pub fn smoothstep_bell_curve(x: f64, mean: f64, width: f64) -> f64 {
     };
 
     smoothstep(new_x, 0.0, width)
+}
+
+/// Smoothstep bell curve overload of `DiffUtils.SmoothstepBellCurve(x)`.
+///
+/// Peaks at `x = 0.5` and falls to 0 at `x = 0` and `x = 1`.
+pub fn smoothstep_bell_curve_unit(mut x: f64) -> f64 {
+    x = 0.5 - f64::abs(x - 0.5);
+    x = f64::clamp(x * 2.0, 0.0, 1.0);
+
+    x * x * (3.0 - 2.0 * x)
 }
 
 pub const fn smoothstep(x: f64, start: f64, end: f64) -> f64 {

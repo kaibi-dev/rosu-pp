@@ -1,9 +1,13 @@
 pub use self::{
-    aim::AimEvaluator, flashlight::FlashlightEvaluator, rhythm::RhythmEvaluator,
+    agility::AgilityEvaluator, flashlight::FlashlightEvaluator, flow::FlowAimEvaluator,
+    reading::ReadingEvaluator, rhythm::RhythmEvaluator, snap::SnapAimEvaluator,
     speed::SpeedEvaluator,
 };
 
-mod aim;
+mod agility;
 mod flashlight;
+mod flow;
+mod reading;
 mod rhythm;
+mod snap;
 mod speed;

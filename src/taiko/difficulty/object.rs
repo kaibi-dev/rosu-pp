@@ -27,6 +27,8 @@ pub struct TaikoDifficultyObject {
     pub rhythm_data: RhythmData,
     pub color_data: ColorData,
     pub effective_bpm: f64,
+    /// Full rate-adjusted great hit window (`2 *` one-sided window).
+    pub hit_window_great: f64,
 }
 
 impl TaikoDifficultyObject {
@@ -37,6 +39,7 @@ impl TaikoDifficultyObject {
         idx: usize,
         map: &Beatmap,
         global_slider_velocity: f64,
+        hit_window_great: f64,
         objects: &mut TaikoDifficultyObjects,
     ) -> RefCount<Self> {
         let delta_time = (hit_object.start_time - last_object.start_time) / clock_rate;
@@ -94,6 +97,7 @@ impl TaikoDifficultyObject {
             rhythm_data,
             color_data,
             effective_bpm,
+            hit_window_great,
         });
 
         match hit_object.hit_type {

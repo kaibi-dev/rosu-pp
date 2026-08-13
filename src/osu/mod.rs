@@ -12,7 +12,10 @@ use crate::{
 pub use self::{
     attributes::{OsuDifficultyAttributes, OsuPerformanceAttributes},
     difficulty::gradual::OsuGradualDifficulty,
-    performance::{InspectOsuPerformance, OsuPerformance, gradual::OsuGradualPerformance},
+    performance::{
+        InspectOsuPerformance, OsuPerformance, PERFORMANCE_BASE_MULTIPLIER,
+        PERFORMANCE_NORM_EXPONENT, gradual::OsuGradualPerformance,
+    },
     score_state::{OsuHitResults, OsuScoreOrigin, OsuScoreState},
     strains::OsuStrains,
 };

@@ -85,5 +85,5 @@ pub(super) fn custom_accuracy(
     let numerator = n320 * 32 + n300 * 30 + n200 * 20 + n100 * 10 + n50 * 5;
     let denominator = total_hits * 32;
 
-    f64::from(numerator) / f64::from(denominator)
+    (f64::from(numerator) / f64::from(denominator)).clamp(0.0, 1.0)
 }

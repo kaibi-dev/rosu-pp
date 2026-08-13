@@ -106,7 +106,7 @@ fn new(difficulty: Difficulty, map: &Beatmap) -> CatchGradualDifficulty {
     );
 
     let count = count.into_gradual();
-    let movement = Movement::new(clock_rate);
+    let movement = Movement::new();
 
     CatchGradualDifficulty {
         idx: 0,
